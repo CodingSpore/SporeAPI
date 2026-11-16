@@ -17,6 +17,7 @@ import redis.clients.jedis.Jedis
 import redis.clients.jedis.JedisPool
 import redis.clients.jedis.JedisPoolConfig
 import redis.clients.jedis.JedisPubSub
+import redis.clients.jedis.params.SetParams
 import java.lang.reflect.InvocationTargetException
 import java.time.Duration
 import java.util.UUID
@@ -210,6 +211,27 @@ object SporeRedis {
 
     inline fun <T> connection(block: (Jedis) -> T): T =
         blockingIo("redis.command") { publisher().resource.use(block) }
+
+    fun set(key: String, value: Any, ttl: kotlin.time.Duration? = null) {
+        connection { jedis -> jedis.set(key, value.toString(), ttlParams(SetParams(), ttl)) }
+    }
+
+    fun setIfAbsent(key: String, value: Any, ttl: kotlin.time.Duration? = null): Boolean =
+        connection { jedis -> jedis.set(key, value.toString(), ttlParams(SetParams().nx(), ttl)) != null }
+
+    fun get(key: String): String? = connection { it.get(key) }
+
+    fun delete(key: String): Boolean = connection { it.del(key) == 1L }
+
+    fun exists(key: String): Boolean = connection { it.exists(key) }
+
+    private fun ttlParams(params: SetParams, ttl: kotlin.time.Duration?): SetParams {
+        if (ttl != null) {
+            require(ttl.isPositive()) { "ttl must be positive, was $ttl" }
+            params.px(ttl.inWholeMilliseconds.coerceAtLeast(1))
+        }
+        return params
+    }
 
     @PublishedApi
     internal fun publisher(): JedisPool = pool ?: error("SporeRedis is not connected")
