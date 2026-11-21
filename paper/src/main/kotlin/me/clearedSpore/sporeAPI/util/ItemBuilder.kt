@@ -157,10 +157,16 @@ class ItemBuilder private constructor(
     }
 
 
-    fun setSkullTexture(signature: String, texture: String): ItemBuilder {
+    fun setSkullTexture(base64Texture: String): ItemBuilder =
+        applyTexture(base64Texture, null)
+
+    fun setSkullTexture(signature: String, texture: String): ItemBuilder =
+        applyTexture(texture, signature)
+
+    private fun applyTexture(texture: String, signature: String?): ItemBuilder {
         if (meta !is SkullMeta) return this
 
-        val profile: PlayerProfile = Bukkit.createProfile(UUID.randomUUID())
+        val profile = Bukkit.createProfile(UUID.randomUUID())
         profile.setProperty(ProfileProperty("textures", texture, signature))
         meta.playerProfile = profile
 
