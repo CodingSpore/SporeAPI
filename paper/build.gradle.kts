@@ -14,7 +14,7 @@ dependencies {
     api("xyz.xenondevs.invui:invui-kotlin:2.3.0")
 
     api(platform("org.incendo:cloud-bom:2.1.0"))
-    api(platform("org.incendo:cloud-minecraft-bom:2.0.0"))
+    api(platform("org.incendo:cloud-minecraft-bom:2.0.1"))
 
     api("org.incendo:cloud-core")
     api("org.incendo:cloud-annotations")
