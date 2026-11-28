@@ -12,7 +12,7 @@ dependencies {
     api("net.kyori:adventure-text-serializer-legacy:5.2.0")
 
     compileOnly(platform("org.incendo:cloud-bom:2.1.0"))
-    compileOnly(platform("org.incendo:cloud-minecraft-bom:2.0.0"))
+    compileOnly(platform("org.incendo:cloud-minecraft-bom:2.0.1"))
     compileOnly("org.incendo:cloud-core")
     compileOnly("org.incendo:cloud-annotations")
     compileOnly("org.incendo:cloud-minecraft-extras")
